@@ -24,8 +24,8 @@
   	unsigned short port;    //To store the Port of the Incoming Packet
 	unsigned char ip[16];   //To store the IP Address of the Incoming Packet
 	unsigned char time[30]; //To store the Timestamp of the Incoming Packet
-	unsigned short count;   //To store the occurance of the same IP Packet
-	unsigned char data[50]; //To store the data received
+	unsigned short count;   //To store the number of occurance of the same IP Packet
+	unsigned char data[50]; //To store the Data received
 	unsigned short protocol //To store the Protocol for the Incoming IP Packet
 	struct packet *next;    
 
