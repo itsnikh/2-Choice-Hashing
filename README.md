@@ -38,4 +38,3 @@
 
 # lookup_packet() 
 >> API will look for the particular IP Address and return accordingly. This API also has a void poineter as argumet which then is later type-casted to struct packet format.
-
