@@ -1,10 +1,8 @@
 /*
- *
  * This is a server program which uses Select() as the blocking statement for contineous monitoring of any incoming TCP/UDP Packets.
  * In this Server.c File, for the incoming Packet, we will note the IP, Port, timestamp of the incoming connection.
  * Also, the counter value is also updated for each and every same IP and Protocol.
  * It uses API's Insert_packet(), Delete_packet() and Lookup_packet for insertion, modification,deletion of the Entered IP address.
- *
  */
 
 /*
