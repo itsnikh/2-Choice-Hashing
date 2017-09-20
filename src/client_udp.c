@@ -6,7 +6,7 @@
 
 #include "../include/header_client.h" 
 
-void main()
+int main()
 {
 	short fd;
 	struct sockaddr_in c;
@@ -28,4 +28,5 @@ void main()
 	if ((sendto(fd, buf, sizeof(buf), 0, (struct sockaddr *)&c, sizeof(c) ))>0)
 	   printf("Data Written Successfully \n");	
 	close(fd);
+	return 0;
 }
