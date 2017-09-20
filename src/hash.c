@@ -86,7 +86,8 @@ unsigned char entry_check(unsigned short index, struct packet *a)
 }
 
 /*
- * The Lookup_Packet() will simply check whether the incoming IP Address is present in the Hash table or not! If positive, then 0 is returned else if negative then 1 is returned.
+ * The Lookup_Packet() will simply check whether the incoming IP Address is present in the Hash table or not! If positive, then 0 is returned else if negative then 1 is returned. 
+ * Do note that the agrument is of type (void *) and the operations are carried out after the type conversion to (Struct Packet *) type.
  */
 unsigned char lookup_packet(void *arg)
 {
@@ -221,9 +222,12 @@ void new_entry(unsigned short index, struct packet *temp, struct packet *a)
 		temp->next=p;
 	}
 	return;
-
 }
 
+/*
+ * Insert_Packet() will insert/update a/an new/old entry. 
+ * Do note that the agrument is of type (void *) and the operations are carried out after the type conversion to (Struct Packet *) type.
+ */
 void insert_packet(void *arg )
 {
 	struct packet *a= (struct packet *)arg;
@@ -261,7 +265,6 @@ void insert_packet(void *arg )
 			}
 		}
 	}
-
 	else if(entry_check(index1, a)==0)
 	{
 		temp=h[index1];
@@ -295,18 +298,23 @@ void insert_packet(void *arg )
 	}
 }
 
+/*
+ * Delete_Packet() will check whether IP entry is present or not.
+ * If not present, then the data cannot be deleted. 
+ * Else we find the entry and then delete the IP entry. 
+ */
 void delete_packet(void *arg)
 {
-	struct packet *a = (struct packet *) arg;
-	unsigned short index1= hash1(a->ip);
-	unsigned short index2= hash2(a->ip);
-	unsigned char flag=0;
-	struct packet *temp, *prev;
-	
-	if( ( entry_check(index1, a) && entry_check(index2, a) ) )
+	if( lookup_packet(arg) )
      	   printf( "Cannot Delete...Entry not present\n" );
 	else
 	{
+		struct packet *a = (struct packet *) arg;
+		unsigned short index1= hash1(a->ip);
+		unsigned short index2= hash2(a->ip);
+		unsigned char flag=0;
+		struct packet *temp, *prev;
+		
 		temp=h[index1];
 		prev=temp;
 		if(entry_check(index1, a)==0)
@@ -328,9 +336,9 @@ void delete_packet(void *arg)
 				{
 					prev=temp;
 					temp=temp->next;
-				} // end of else 
-			}//end of while
-		} // end of if
+				}
+			}
+		}
 
 		else if( entry_check(index2,a)==0 )
 		{
@@ -353,17 +361,12 @@ void delete_packet(void *arg)
 				{
 					prev=temp;
 					temp=temp->next;
-				} // end of else 
-			}//end of while
+				}
+			}
 		}
-	}//end of else 
-
+	}
 	if(flag==1)
 	printf("\nENTRY DELETED\n");
 	else if(flag==0)
 	printf("\nENTRY NOT FOUND...CANNOT DELETE IT!!\n");
 }
-
-
-
-
