@@ -1,3 +1,9 @@
+/*
+ * For a Client-Server Socket Program, this Program will be the Client which will send the UDP Packet to the assigned IP and Port.
+ * Here we have included the header file as Header_Client.h which is present in the include folder.
+ * This Program creates a UDP Socket and sends the data taken during Run time to the Server.
+ */
+
 #include "../include/header_client.h" 
 
 void main()
