@@ -1,3 +1,13 @@
+/* 
+ * This file contains the Insert_packet(), Delete_Paceket(), Lookup_packet() functions which will respectively Insert/Update, Delete,
+ * and Look for the incoming IP Packets.
+ * According to 2-Choice Hashing, a Balance needs to be maintained for the 2-Choice Hashing method between the 1st Hashing and 
+ * 2nd hashing part of the table.
+ */
+
+/*
+ * This Include file will include all the necessary header files.
+ */
 #include "../include/header_server.h"
 
 struct packet
@@ -12,8 +22,15 @@ struct packet
 
 }*h[65536];
 
+/*
+ * A Global Hash table which has 65536 indexes and the hashing is done accordingly.
+ * Also for the hash table, a balance needs to be maintained between both halfs of the tables, Thus, a balance variable is declared.
+ */
 static char balance=0;
 
+/*
+ * Below function takes input the Incoming Packet IP Address, adds all the decimal equivalent numbers and will return an Index value which follows the Modulo-Division Hashing method of the sum with a Prime Number. (here it's 79).
+ */
 unsigned short hash1(unsigned char *ip)
 {
 	unsigned short i;
@@ -30,6 +47,10 @@ unsigned short hash1(unsigned char *ip)
 	return (sum % 79) ;
 }
 
+/*
+ * Below function takes input the Incoming Packet IP Address, Ex-Or adds all the decimal equivalent numbers of the IP and will calculate sum as an Index value which follows the Psuedo Random Hashing method keeping the value of A and C as same Prime Number (here it's 97).
+ * Also, sum value is incremented with 32768 because we will need to insert the details in the second half of the Hash Table.
+ */
 unsigned short hash2(unsigned char *ip)
 {
 	unsigned short i;
@@ -48,6 +69,9 @@ unsigned short hash2(unsigned char *ip)
 	return sum ;
 }
 
+/*
+ * The entry_check() called from Lookup_packet() simply traverses through all the entries for the particular index value and returns '0' if the value is present for that index value else '1' for a negative response.
+ */
 unsigned char entry_check(unsigned short index, struct packet *a)
 {
 	struct packet *temp;
@@ -61,6 +85,9 @@ unsigned char entry_check(unsigned short index, struct packet *a)
 	return 1;
 }
 
+/*
+ * The Lookup_Packet() will simply check whether the incoming IP Address is present in the Hash table or not! If positive, then 0 is returned else if negative then 1 is returned.
+ */
 unsigned char lookup_packet(void *arg)
 {
 	struct packet *a= (struct packet *)arg;
@@ -71,7 +98,7 @@ unsigned char lookup_packet(void *arg)
 	if(h[index1]==NULL || h[index2]==NULL)
 	{
 		printf("NO ENTRY PRESENT!!");
-		return -1;
+		return 1;
 	}
 	
 	if( (flag=entry_check(index1,a))==1)
@@ -84,6 +111,9 @@ unsigned char lookup_packet(void *arg)
 	else return flag;	
 }
 
+/*
+ * The Display() will simply display all the valid Entries of the Hash Table.
+ */
 void display()
 {
 	unsigned short c;
@@ -99,32 +129,32 @@ void display()
 
 	else
 	{
-	printf("\n\n\t\t-----HASH TABLE-----");
-	printf("\n\n");
-	for(c=0;c<65535;c++)
-	{
-		temp=h[c];
-	   	
-	   	if(temp==NULL)
-	     	   continue;
-	   	else
-	   	{
-		   printf("\n\nINDEX (%02u) ", c);
-		   while(temp!=NULL)
-		   {		
-			if(temp->protocol == TCP)
-			printf("\n\nSource IP ADDR.: %s:%5d \n  Dest IP ADDR.: %s:%5d \n\t   TIME: %s       PROTOCOL: TCP\n\t   DATA: %s\n\t  COUNT: %hd \n", temp->ip, temp->port, "192.168.131.38", 5000, temp->time, temp->data, temp->count);
-			else 
-			printf("\n\nSource IP ADDR.: %s:%5d \n  Dest IP ADDR.: %s:%5d \n\t   TIME: %s       PROTOCOL: UDP\n\t   DATA: %s\n\t  COUNT: %hd \n", temp->ip, temp->port, "192.168.131.38", 5000, temp->time, temp->data, temp->count);
-			temp=temp->next;
-		   }
-
-	   	}//end of else 	     
-
-	} // end of for loop
-	} //end of else
+		printf("\n\n\t\t-----HASH TABLE-----");
+		printf("\n\n");
+		for(c=0;c<65535;c++)
+		{
+			temp=h[c];
+		   	if(temp==NULL)
+		     	   continue;
+		   	else
+		   	{
+			   printf("\n\nINDEX (%02u) ", c);
+			   while(temp!=NULL)
+			   {		
+				if(temp->protocol == TCP)
+				printf("\n\nSource IP ADDR.: %s:%5d \n  Dest IP ADDR.: %s:%5d \n\t   TIME: %s       PROTOCOL: TCP\n\t   DATA: %s\n\t  COUNT: %hd \n", temp->ip, temp->port, "192.168.131.38", 5000, temp->time, temp->data, temp->count);
+				else 
+				printf("\n\nSource IP ADDR.: %s:%5d \n  Dest IP ADDR.: %s:%5d \n\t   TIME: %s       PROTOCOL: UDP\n\t   DATA: %s\n\t  COUNT: %hd \n", temp->ip, temp->port, "192.168.131.38", 5000, temp->time, temp->data, temp->count);
+				temp=temp->next;
+			   }
+		   	}	     
+		}
+	}
 }
 
+/*
+ * The Update_Entry() will update the Timestamp, Counter Value and Data receive, if the Entry for the incoming IP address already exist in the Table
+ */
 void update_entry(struct packet *p, struct packet *a)
 {
 	unsigned char c;
@@ -139,6 +169,9 @@ void update_entry(struct packet *p, struct packet *a)
 	   p->data[c]='\0';
 }
 
+/*
+ * New_Entry() will create new entries of new incoming Packets
+ */
 void new_entry(unsigned short index, struct packet *temp, struct packet *a)
 {
 	struct packet *p;	
